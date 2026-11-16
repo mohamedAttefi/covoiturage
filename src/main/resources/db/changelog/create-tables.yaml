@@ -1,0 +1,305 @@
+
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: covoiturage
+      changes:
+
+        - createTable:
+            tableName: conducteurs
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: nom
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: prenom
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: telephone
+                  type: VARCHAR(255)
+              - column:
+                  name: numero_permis
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+        # 2. PASSAGERS
+        - createTable:
+            tableName: passagers
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: nom
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: prenom
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: telephone
+                  type: VARCHAR(255)
+
+        # 3. VEHICULES
+        - createTable:
+            tableName: vehicules
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: marque
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: modele
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: immatriculation
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: couleur
+                  type: VARCHAR(255)
+              - column:
+                  name: capacite
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: conducteur_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        # 4. TRAJETS
+        - createTable:
+            tableName: trajets
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: conducteur_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vehicule_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: places_proposees
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: statut
+                  type: VARCHAR(255)
+                  defaultValue: PUBLIE
+                  constraints:
+                    nullable: false
+
+        # 5. POINTS ARRET
+        - createTable:
+            tableName: points_arret
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: ville
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ordre
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: heure_passage
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: prix_depuis_depart
+                  type: NUMERIC(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: trajet_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        # 6. RESERVATIONS
+        - createTable:
+            tableName: reservations
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: passager_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: trajet_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: point_monte_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: point_descente_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: nombre_places
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: montant_total
+                  type: NUMERIC(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date_reservation
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: statut
+                  type: VARCHAR(255)
+                  defaultValue: CONFIRMEE
+                  constraints:
+                    nullable: false
+
+        # FOREIGN KEYS
+        - addForeignKeyConstraint:
+            baseTableName: vehicules
+            baseColumnNames: conducteur_id
+            referencedTableName: conducteurs
+            referencedColumnNames: id
+            constraintName: fk_vehicule_conducteur
+
+        - addForeignKeyConstraint:
+            baseTableName: trajets
+            baseColumnNames: conducteur_id
+            referencedTableName: conducteurs
+            referencedColumnNames: id
+            constraintName: fk_trajet_conducteur
+
+        - addForeignKeyConstraint:
+            baseTableName: trajets
+            baseColumnNames: vehicule_id
+            referencedTableName: vehicules
+            referencedColumnNames: id
+            constraintName: fk_trajet_vehicule
+
+        - addForeignKeyConstraint:
+            baseTableName: points_arret
+            baseColumnNames: trajet_id
+            referencedTableName: trajets
+            referencedColumnNames: id
+            constraintName: fk_point_trajet
+
+        - addForeignKeyConstraint:
+            baseTableName: reservations
+            baseColumnNames: passager_id
+            referencedTableName: passagers
+            referencedColumnNames: id
+            constraintName: fk_reservation_passager
+
+        - addForeignKeyConstraint:
+            baseTableName: reservations
+            baseColumnNames: trajet_id
+            referencedTableName: trajets
+            referencedColumnNames: id
+            constraintName: fk_reservation_trajet
+
+        - addForeignKeyConstraint:
+            baseTableName: reservations
+            baseColumnNames: point_monte_id
+            referencedTableName: points_arret
+            referencedColumnNames: id
+            constraintName: fk_reservation_monte
+
+        - addForeignKeyConstraint:
+            baseTableName: reservations
+            baseColumnNames: point_descente_id
+            referencedTableName: points_arret
+            referencedColumnNames: id
+            constraintName: fk_reservation_descente
+
+        # UNIQUE CONSTRAINTS
+        - addUniqueConstraint:
+            tableName: points_arret
+            columnNames: trajet_id, ordre
+            constraintName: uk_point_trajet_ordre
+
+        - addUniqueConstraint:
+            tableName: points_arret
+            columnNames: trajet_id, ville
+            constraintName: uk_point_trajet_ville
