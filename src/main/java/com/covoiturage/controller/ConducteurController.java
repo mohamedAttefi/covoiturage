@@ -15,7 +15,9 @@ public class ConducteurController {
 
     private final ConducteurService service;
 
-
+    public ConducteurController(ConducteurService service) {
+        this.service = service;
+    }
 
 
 
