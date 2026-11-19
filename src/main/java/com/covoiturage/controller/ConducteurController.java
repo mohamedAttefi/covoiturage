@@ -25,7 +25,10 @@ public class ConducteurController {
         return service.create(request);
     }
 
-
+    @GetMapping
+    public List<ConducteurResponse> findAll() {
+        return service.findAll();
+    }
 
 
 
