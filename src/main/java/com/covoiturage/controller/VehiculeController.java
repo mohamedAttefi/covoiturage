@@ -15,7 +15,9 @@ public class VehiculeController {
 
     private final VehiculeService service;
 
-
+    public VehiculeController(VehiculeService service) {
+        this.service = service;
+    }
 
 
 
