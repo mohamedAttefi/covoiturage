@@ -15,7 +15,9 @@ public class PassagerController {
 
     private final PassagerService service;
 
-
+    public PassagerController(PassagerService service) {
+        this.service = service;
+    }
 
 
 
