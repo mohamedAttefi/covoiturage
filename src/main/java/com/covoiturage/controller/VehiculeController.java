@@ -30,7 +30,10 @@ public class VehiculeController {
         return service.findAll();
     }
 
-
+    @GetMapping("/{id}")
+    public VehiculeResponse findById(@PathVariable Long id) {
+        return service.findById(id);
+    }
 
 
 
