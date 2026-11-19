@@ -15,7 +15,9 @@ public class TrajetController {
 
     private final TrajetService service;
 
-
+    public TrajetController(TrajetService service) {
+        this.service = service;
+    }
 
 
 
