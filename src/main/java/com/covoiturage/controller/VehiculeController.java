@@ -35,7 +35,12 @@ public class VehiculeController {
         return service.findById(id);
     }
 
-
+    @PutMapping("/{id}")
+    public VehiculeResponse update(
+            @PathVariable Long id,
+            @Valid @RequestBody VehiculeRequest request) {
+        return service.update(id, request);
+    }
 
 
 }
