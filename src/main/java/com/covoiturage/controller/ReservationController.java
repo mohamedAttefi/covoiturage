@@ -30,7 +30,10 @@ public class ReservationController {
         return service.findAll();
     }
 
-
+    @GetMapping("/{id}")
+    public ReservationResponse findById(@PathVariable Long id) {
+        return service.findById(id);
+    }
 
 
 }
