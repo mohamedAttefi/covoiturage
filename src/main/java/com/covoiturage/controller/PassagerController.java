@@ -30,7 +30,10 @@ public class PassagerController {
         return service.findAll();
     }
 
-
+    @GetMapping("/{id}")
+    public PassagerResponse findById(@PathVariable Long id) {
+        return service.findById(id);
+    }
 
 
 
