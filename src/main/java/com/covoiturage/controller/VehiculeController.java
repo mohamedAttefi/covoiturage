@@ -19,7 +19,11 @@ public class VehiculeController {
         this.service = service;
     }
 
-
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public VehiculeResponse create(@Valid @RequestBody VehiculeRequest request) {
+        return service.create(request);
+    }
 
 
 
