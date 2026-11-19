@@ -19,7 +19,11 @@ public class ReservationController {
         this.service = service;
     }
 
-
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ReservationResponse create(@Valid @RequestBody ReservationRequest request) {
+        return service.create(request);
+    }
 
 
 
