@@ -15,7 +15,9 @@ public class ReservationController {
 
     private final ReservationService service;
 
-
+    public ReservationController(ReservationService service) {
+        this.service = service;
+    }
 
 
 
