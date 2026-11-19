@@ -30,7 +30,10 @@ public class TrajetController {
         return service.findAll();
     }
 
-
+    @GetMapping("/{id}")
+    public TrajetResponse findById(@PathVariable Long id) {
+        return service.findById(id);
+    }
 
 
 }
