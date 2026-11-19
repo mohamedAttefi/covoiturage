@@ -35,7 +35,12 @@ public class PassagerController {
         return service.findById(id);
     }
 
-
+    @PutMapping("/{id}")
+    public PassagerResponse update(
+            @PathVariable Long id,
+            @Valid @RequestBody PassagerRequest request) {
+        return service.update(id, request);
+    }
 
 
 }
