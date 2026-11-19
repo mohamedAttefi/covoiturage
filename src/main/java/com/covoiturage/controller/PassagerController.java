@@ -19,7 +19,11 @@ public class PassagerController {
         this.service = service;
     }
 
-
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public PassagerResponse create(@Valid @RequestBody PassagerRequest request) {
+        return service.create(request);
+    }
 
 
 
