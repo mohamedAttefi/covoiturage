@@ -25,7 +25,10 @@ public class VehiculeController {
         return service.create(request);
     }
 
-
+    @GetMapping
+    public List<VehiculeResponse> findAll() {
+        return service.findAll();
+    }
 
 
 
