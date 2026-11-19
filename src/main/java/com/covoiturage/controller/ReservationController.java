@@ -35,5 +35,9 @@ public class ReservationController {
         return service.findById(id);
     }
 
-
+    @PatchMapping("/{id}/annuler")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cancel(@PathVariable Long id) {
+        service.cancel(id);
+    }
 }
