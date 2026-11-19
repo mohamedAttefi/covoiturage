@@ -35,7 +35,12 @@ public class ConducteurController {
         return service.findById(id);
     }
 
-
+    @PutMapping("/{id}")
+    public ConducteurResponse update(
+            @PathVariable Long id,
+            @Valid @RequestBody ConducteurRequest request) {
+        return service.update(id, request);
+    }
 
 
 }
