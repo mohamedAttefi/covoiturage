@@ -9,5 +9,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenApiConfig {
 
-
+    @Bean
+    public OpenAPI covoiturageOpenAPI() {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("Covoiturage API")
+                        .description("API for managing drivers, passengers, vehicles, trips, and reservations.")
+                        .version("v1")
+                        .contact(new Contact().name("Covoiturage API")));
+    }
 }
