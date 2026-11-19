@@ -25,7 +25,10 @@ public class PassagerController {
         return service.create(request);
     }
 
-
+    @GetMapping
+    public List<PassagerResponse> findAll() {
+        return service.findAll();
+    }
 
 
 
