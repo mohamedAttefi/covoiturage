@@ -19,7 +19,11 @@ public class ConducteurController {
         this.service = service;
     }
 
-
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ConducteurResponse create(@Valid @RequestBody ConducteurRequest request) {
+        return service.create(request);
+    }
 
 
 
