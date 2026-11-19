@@ -30,7 +30,10 @@ public class ConducteurController {
         return service.findAll();
     }
 
-
+    @GetMapping("/{id}")
+    public ConducteurResponse findById(@PathVariable Long id) {
+        return service.findById(id);
+    }
 
 
 
