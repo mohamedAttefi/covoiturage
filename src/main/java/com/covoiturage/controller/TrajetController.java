@@ -25,7 +25,10 @@ public class TrajetController {
         return service.create(request);
     }
 
-
+    @GetMapping
+    public List<TrajetResponse> findAll() {
+        return service.findAll();
+    }
 
 
 
