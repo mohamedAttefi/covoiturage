@@ -25,7 +25,10 @@ public class ReservationController {
         return service.create(request);
     }
 
-
+    @GetMapping
+    public List<ReservationResponse> findAll() {
+        return service.findAll();
+    }
 
 
 
