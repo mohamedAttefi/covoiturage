@@ -19,7 +19,11 @@ public class TrajetController {
         this.service = service;
     }
 
-
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public TrajetResponse create(@Valid @RequestBody TrajetRequest request) {
+        return service.create(request);
+    }
 
 
 
