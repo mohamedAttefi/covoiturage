@@ -68,5 +68,15 @@ public class GlobalExceptionHandler {
         return createError(HttpStatus.BAD_REQUEST, message, request);
     }
 
-
+    @ExceptionHandler(Exception.class)
+    public ProblemDetail handleInternalError(
+            Exception ex,
+            HttpServletRequest request) {
+        log.error("Unexpected server error", ex);
+        return createError(
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                "An unexpected error occurred",
+                request
+        );
+    }
 }
