@@ -27,7 +27,14 @@ public class GlobalExceptionHandler {
         return problem;
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ProblemDetail handleNotFound(
+            ResourceNotFoundException ex,
+            HttpServletRequest request) {
+        log.warn("Resource not found: {}", ex.getMessage());
 
+        return createError(HttpStatus.NOT_FOUND, ex.getMessage(), request);
+    }
 
 
 
