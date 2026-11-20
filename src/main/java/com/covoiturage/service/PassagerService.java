@@ -10,7 +10,7 @@ public interface PassagerService {
 
     List<PassagerResponse> findAll();
 
-
+    PassagerResponse findById(Long id);
 
 
 
