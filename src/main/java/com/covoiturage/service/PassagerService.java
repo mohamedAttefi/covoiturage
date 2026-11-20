@@ -8,7 +8,7 @@ public interface PassagerService {
 
     PassagerResponse create(PassagerRequest request);
 
-
+    List<PassagerResponse> findAll();
 
 
 
