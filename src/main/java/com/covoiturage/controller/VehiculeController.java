@@ -35,10 +35,13 @@ public class VehiculeController {
         return service.findById(id);
     }
 
+    @GetMapping("/conducteur/{conducteurId}")
+    public List<VehiculeResponse> findByConducteurId(@PathVariable Long conducteurId) {
+        return service.findByConducteurId(conducteurId);
+    }
+
     @PutMapping("/{id}")
-    public VehiculeResponse update(
-            @PathVariable Long id,
-            @Valid @RequestBody VehiculeRequest request) {
+    public VehiculeResponse update(@PathVariable Long id, @Valid @RequestBody VehiculeRequest request) {
         return service.update(id, request);
     }
 

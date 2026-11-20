@@ -14,6 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
+import com.covoiturage.exception.BusinessRuleException;
+import com.covoiturage.repository.TrajetRepository;
 
 @ExtendWith(MockitoExtension.class)
 class VehiculeServiceImplTest {
@@ -23,6 +25,9 @@ class VehiculeServiceImplTest {
 
     @Mock
     ConducteurRepository conducteurRepository;
+
+    @Mock
+    TrajetRepository trajetRepository;
 
     @Mock
     VehiculeMapper mapper;
@@ -71,5 +76,30 @@ class VehiculeServiceImplTest {
         );
 
         verify(vehiculeRepository, never()).save(any());
+    }
+
+    @Test
+    void shouldDeleteVehicleWhenNotUsedByAnyJourney() {
+
+        when(vehiculeRepository.existsById(1L)).thenReturn(true);
+        when(trajetRepository.existsByVehicule_Id(1L)).thenReturn(false);
+
+        service.delete(1L);
+
+        verify(vehiculeRepository).deleteById(1L);
+    }
+
+    @Test
+    void shouldRejectDeletionWhenVehicleIsUsedByJourney() {
+
+        when(vehiculeRepository.existsById(1L)).thenReturn(true);
+        when(trajetRepository.existsByVehicule_Id(1L)).thenReturn(true);
+
+        assertThrows(
+                BusinessRuleException.class,
+                () -> service.delete(1L)
+        );
+
+        verify(vehiculeRepository, never()).deleteById(anyLong());
     }
 }

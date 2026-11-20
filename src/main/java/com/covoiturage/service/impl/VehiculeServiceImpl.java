@@ -4,10 +4,12 @@ import com.covoiturage.dto.VehiculeRequest;
 import com.covoiturage.dto.VehiculeResponse;
 import com.covoiturage.entity.Conducteur;
 import com.covoiturage.entity.Vehicule;
+import com.covoiturage.exception.BusinessRuleException;
 import com.covoiturage.exception.DuplicateResourceException;
 import com.covoiturage.exception.ResourceNotFoundException;
 import com.covoiturage.mapper.VehiculeMapper;
 import com.covoiturage.repository.ConducteurRepository;
+import com.covoiturage.repository.TrajetRepository;
 import com.covoiturage.repository.VehiculeRepository;
 import com.covoiturage.service.VehiculeService;
 import org.springframework.stereotype.Service;
@@ -20,14 +22,16 @@ import java.util.List;
 public class VehiculeServiceImpl implements VehiculeService {
 
     private final VehiculeRepository vehiculeRepository;
+    private final TrajetRepository trajetRepository;
     private final ConducteurRepository conducteurRepository;
     private final VehiculeMapper mapper;
 
     public VehiculeServiceImpl(
-            VehiculeRepository vehiculeRepository,
+            VehiculeRepository vehiculeRepository, TrajetRepository trajetRepository,
             ConducteurRepository conducteurRepository,
             VehiculeMapper mapper) {
         this.vehiculeRepository = vehiculeRepository;
+        this.trajetRepository = trajetRepository;
         this.conducteurRepository = conducteurRepository;
         this.mapper = mapper;
     }
@@ -66,6 +70,19 @@ public class VehiculeServiceImpl implements VehiculeService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<VehiculeResponse> findByConducteurId(Long conducteurId) {
+        if (!conducteurRepository.existsById(conducteurId)) {
+            throw new ResourceNotFoundException("Driver not found");
+        }
+
+        return vehiculeRepository.findByConducteur_Id(conducteurId)
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
+
+    @Override
     public VehiculeResponse update(Long id, VehiculeRequest request) {
         Vehicule vehicule = vehiculeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
@@ -92,6 +109,12 @@ public class VehiculeServiceImpl implements VehiculeService {
     public void delete(Long id) {
         if (!vehiculeRepository.existsById(id)) {
             throw new ResourceNotFoundException("Vehicle not found");
+        }
+
+        if (trajetRepository.existsByVehicule_Id(id)) {
+            throw new BusinessRuleException(
+                    "Cannot delete a vehicle associated with a journey"
+            );
         }
 
         vehiculeRepository.deleteById(id);

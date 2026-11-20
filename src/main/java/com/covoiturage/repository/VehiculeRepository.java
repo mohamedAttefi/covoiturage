@@ -3,6 +3,9 @@ package com.covoiturage.repository;
 import com.covoiturage.entity.Vehicule;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface VehiculeRepository extends JpaRepository<Vehicule, Long> {
     boolean existsByImmatriculation(String immatriculation);
+    List<Vehicule> findByConducteur_Id(Long conducteurId);
 }
