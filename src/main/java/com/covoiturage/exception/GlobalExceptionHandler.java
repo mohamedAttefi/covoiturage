@@ -36,7 +36,13 @@ public class GlobalExceptionHandler {
         return createError(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
 
-
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ProblemDetail handleDuplicate(
+            DuplicateResourceException ex,
+            HttpServletRequest request) {
+        log.warn("Business conflict: {}", ex.getMessage());
+        return createError(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
 
 
 
