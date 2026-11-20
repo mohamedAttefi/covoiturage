@@ -14,5 +14,5 @@ public interface PassagerService {
 
     PassagerResponse update(Long id, PassagerRequest request);
 
-
+    void delete(Long id);
 }
