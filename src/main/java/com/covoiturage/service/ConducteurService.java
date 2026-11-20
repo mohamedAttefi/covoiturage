@@ -12,7 +12,7 @@ public interface ConducteurService {
 
     ConducteurResponse findById(Long id);
 
-
+    ConducteurResponse update(Long id, ConducteurRequest request);
 
 
 }
