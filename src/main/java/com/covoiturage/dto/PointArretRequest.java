@@ -12,7 +12,7 @@ public record PointArretRequest(
         @NotBlank
         String ville,
 
-        @Min(1)
+        @Min(0)
         int ordre,
 
         @NotNull

@@ -20,11 +20,26 @@ public class GlobalExceptionHandler {
             HttpServletRequest request) {
 
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(status, message);
+        problem.setTitle(status.getReasonPhrase());
 
         problem.setProperty("timestamp", LocalDateTime.now());
+        problem.setProperty("status", status.value());
+        problem.setProperty("error", status.getReasonPhrase());
         problem.setProperty("path", request.getRequestURI());
 
         return problem;
+    }
+
+    @ExceptionHandler(InvalidRequestException.class)
+    public ProblemDetail handleInvalidRequest(InvalidRequestException ex, HttpServletRequest request) {
+        log.warn("Invalid request: {}", ex.getMessage());
+        return createError(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(ForbiddenActionException.class)
+    public ProblemDetail handleForbidden(ForbiddenActionException ex, HttpServletRequest request) {
+        log.warn("Forbidden action: {}", ex.getMessage());
+        return createError(HttpStatus.FORBIDDEN, ex.getMessage(), request);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)

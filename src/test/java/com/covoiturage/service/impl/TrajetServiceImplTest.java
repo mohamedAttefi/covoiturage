@@ -64,14 +64,14 @@ class TrajetServiceImplTest {
 
         PointArretRequest departure = new PointArretRequest(
                 "Marrakech",
-                1,
+                0,
                 LocalDateTime.now().minusDays(1),
                 BigDecimal.ZERO
         );
 
         PointArretRequest arrival = new PointArretRequest(
                 "Casablanca",
-                2,
+                1,
                 LocalDateTime.now().plusDays(1),
                 new BigDecimal("120")
         );
