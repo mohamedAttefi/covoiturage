@@ -44,7 +44,14 @@ public class GlobalExceptionHandler {
         return createError(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
 
+    @ExceptionHandler(BusinessRuleException.class)
+    public ProblemDetail handleBusinessRule(
+            BusinessRuleException ex,
+            HttpServletRequest request) {
+        log.warn("Business conflict: {}", ex.getMessage());
 
+        return createError(HttpStatus.CONFLICT, ex.getMessage(), request);
+    }
 
 
 
