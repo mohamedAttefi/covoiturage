@@ -35,6 +35,11 @@ public class PassagerController {
         return service.findById(id);
     }
 
+    @GetMapping("/search")
+    public List<PassagerResponse> search(@RequestParam String keyword) {
+        return service.search(keyword);
+    }
+
     @PutMapping("/{id}")
     public PassagerResponse update(
             @PathVariable Long id,

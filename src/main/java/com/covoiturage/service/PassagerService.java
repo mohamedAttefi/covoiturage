@@ -12,6 +12,8 @@ public interface PassagerService {
 
     PassagerResponse findById(Long id);
 
+    List<PassagerResponse> search(String keyword);
+
     PassagerResponse update(Long id, PassagerRequest request);
 
     void delete(Long id);

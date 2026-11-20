@@ -59,6 +59,18 @@ public class PassagerServiceImpl implements PassagerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<PassagerResponse> search(String keyword) {
+        return repository
+                .findByNomContainingIgnoreCaseOrPrenomContainingIgnoreCaseOrEmailContainingIgnoreCase(
+                        keyword, keyword, keyword
+                )
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
+
+    @Override
     public PassagerResponse update(Long id, PassagerRequest request) {
 
         Passager passager = repository.findById(id)
