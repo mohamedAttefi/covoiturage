@@ -8,7 +8,7 @@ public interface ReservationService {
 
     ReservationResponse create(ReservationRequest request);
 
-
+    List<ReservationResponse> findAll();
 
 
 
