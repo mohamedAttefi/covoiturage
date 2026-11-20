@@ -19,5 +19,9 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("statut") StatutReservation statut
     );
 
-
+    boolean existsByPassager_IdAndTrajet_IdAndStatut(
+            Long passagerId,
+            Long trajetId,
+            StatutReservation statut
+    );
 }
