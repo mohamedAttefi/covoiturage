@@ -12,6 +12,8 @@ public interface ConducteurService {
 
     ConducteurResponse findById(Long id);
 
+    List<ConducteurResponse> search(String keyword);
+
     ConducteurResponse update(Long id, ConducteurRequest request);
 
     void delete(Long id);

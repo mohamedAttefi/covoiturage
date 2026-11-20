@@ -62,6 +62,18 @@ public class ConducteurServiceImpl implements ConducteurService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<ConducteurResponse> search(String keyword) {
+        return repository
+                .findByNomContainingIgnoreCaseOrPrenomContainingIgnoreCaseOrEmailContainingIgnoreCase(
+                        keyword, keyword, keyword
+                )
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
+
+    @Override
     public ConducteurResponse update(Long id, ConducteurRequest request) {
 
         Conducteur conducteur = repository.findById(id)

@@ -35,6 +35,12 @@ public class ConducteurController {
         return service.findById(id);
     }
 
+    @GetMapping("/search")
+    public List<ConducteurResponse> search(
+            @RequestParam String keyword) {
+        return service.search(keyword);
+    }
+
     @PutMapping("/{id}")
     public ConducteurResponse update(
             @PathVariable Long id,
