@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PassagerService {
 
-
+    PassagerResponse create(PassagerRequest request);
 
 
 
