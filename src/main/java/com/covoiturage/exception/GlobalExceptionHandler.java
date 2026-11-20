@@ -53,7 +53,20 @@ public class GlobalExceptionHandler {
         return createError(HttpStatus.CONFLICT, ex.getMessage(), request);
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ProblemDetail handleValidation(
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request) {
 
+        String message = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .findFirst()
+                .orElse("Invalid request data");
+        log.warn("Validation failed: {}", message);
+        return createError(HttpStatus.BAD_REQUEST, message, request);
+    }
 
 
 }
