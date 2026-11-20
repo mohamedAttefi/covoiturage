@@ -14,7 +14,18 @@ public class GlobalExceptionHandler {
     private static final Logger log =
             LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    private ProblemDetail createError(
+            HttpStatus status,
+            String message,
+            HttpServletRequest request) {
 
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(status, message);
+
+        problem.setProperty("timestamp", LocalDateTime.now());
+        problem.setProperty("path", request.getRequestURI());
+
+        return problem;
+    }
 
 
 
