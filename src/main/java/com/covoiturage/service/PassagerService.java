@@ -12,7 +12,7 @@ public interface PassagerService {
 
     PassagerResponse findById(Long id);
 
-
+    PassagerResponse update(Long id, PassagerRequest request);
 
 
 }
