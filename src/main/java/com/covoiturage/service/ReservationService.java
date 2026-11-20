@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ReservationService {
 
-
+    ReservationResponse create(ReservationRequest request);
 
 
 
