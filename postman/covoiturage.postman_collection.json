@@ -1,0 +1,56 @@
+{
+  "info": {
+    "name": "Covoiturage multi-étapes",
+    "description": "Scénario de démonstration CRUD, publication, recherche, réservation et annulation. Lancez les requêtes dans l’ordre; les réponses alimentent les variables d’identifiants.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "conducteurId", "value": "" },
+    { "key": "passagerId", "value": "" },
+    { "key": "vehiculeId", "value": "" },
+    { "key": "trajetId", "value": "" },
+    { "key": "monteeId", "value": "" },
+    { "key": "descenteId", "value": "" },
+    { "key": "reservationId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. Créer conducteur",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nom\": \"Alami\",\n  \"prenom\": \"Hamid\",\n  \"email\": \"hamid.{{$timestamp}}@example.com\",\n  \"telephone\": \"0612345678\",\n  \"numeroPermis\": \"PER-{{$timestamp}}\"\n}" }, "url": "{{baseUrl}}/api/conducteurs" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('conducteurId', pm.response.json().id);"] } }]
+    },
+    {
+      "name": "2. Créer passager",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nom\": \"Karim\",\n  \"prenom\": \"Ali\",\n  \"email\": \"karim.{{$timestamp}}@example.com\",\n  \"telephone\": \"0611122233\"\n}" }, "url": "{{baseUrl}}/api/passagers" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('passagerId', pm.response.json().id);"] } }]
+    },
+    {
+      "name": "3. Ajouter véhicule",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"marque\": \"Dacia\",\n  \"modele\": \"Logan\",\n  \"immatriculation\": \"{{$timestamp}}-A-6\",\n  \"couleur\": \"Blanc\",\n  \"capacite\": 4,\n  \"conducteurId\": {{conducteurId}}\n}" }, "url": "{{baseUrl}}/api/vehicules" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('vehiculeId', pm.response.json().id);"] } }]
+    },
+    {
+      "name": "4. Publier trajet Rabat → Casablanca → Settat → Marrakech",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"conducteurId\": {{conducteurId}},\n  \"vehiculeId\": {{vehiculeId}},\n  \"placesProposees\": 3,\n  \"pointsArret\": [\n    {\"ville\":\"Rabat\",\"ordre\":0,\"heurePassage\":\"2030-06-01T17:00:00\",\"prixDepuisDepart\":0},\n    {\"ville\":\"Casablanca\",\"ordre\":1,\"heurePassage\":\"2030-06-01T18:15:00\",\"prixDepuisDepart\":40},\n    {\"ville\":\"Settat\",\"ordre\":2,\"heurePassage\":\"2030-06-01T19:15:00\",\"prixDepuisDepart\":70},\n    {\"ville\":\"Marrakech\",\"ordre\":3,\"heurePassage\":\"2030-06-01T21:30:00\",\"prixDepuisDepart\":120}\n  ]\n}" }, "url": "{{baseUrl}}/api/trajets" },
+      "event": [{ "listen": "test", "script": { "exec": ["const t=pm.response.json();pm.collectionVariables.set('trajetId',t.id);pm.collectionVariables.set('monteeId',t.pointsArret[2].id);pm.collectionVariables.set('descenteId',t.pointsArret[3].id);"] } }]
+    },
+    {
+      "name": "5. Rechercher segment Settat → Marrakech",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/trajets/search?depart=Settat&arrivee=Marrakech&date=2030-06-01&nombrePlaces=1&page=0&size=10&prixMax=50" }
+    },
+    {
+      "name": "6. Réserver une place (50 DH)",
+      "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"passagerId\": {{passagerId}},\n  \"trajetId\": {{trajetId}},\n  \"pointMonteeId\": {{monteeId}},\n  \"pointDescenteId\": {{descenteId}},\n  \"nombrePlaces\": 1\n}" }, "url": "{{baseUrl}}/api/reservations" },
+      "event": [{ "listen": "test", "script": { "exec": ["pm.collectionVariables.set('reservationId',pm.response.json().id);"] } }]
+    },
+    {
+      "name": "7. Historique passager",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/reservations/passager/{{passagerId}}" }
+    },
+    {
+      "name": "8. Annuler réservation",
+      "request": { "method": "PATCH", "url": "{{baseUrl}}/api/reservations/{{reservationId}}/annuler?passagerId={{passagerId}}" }
+    }
+  ]
+}
