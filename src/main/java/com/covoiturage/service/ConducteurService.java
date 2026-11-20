@@ -10,7 +10,7 @@ public interface ConducteurService {
 
     List<ConducteurResponse> findAll();
 
-
+    ConducteurResponse findById(Long id);
 
 
 
