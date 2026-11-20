@@ -14,5 +14,5 @@ public interface ConducteurService {
 
     ConducteurResponse update(Long id, ConducteurRequest request);
 
-
+    void delete(Long id);
 }
