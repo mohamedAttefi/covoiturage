@@ -25,19 +25,15 @@ public class ReservationController {
         return service.create(request);
     }
 
-    @GetMapping
-    public List<ReservationResponse> findAll() {
-        return service.findAll();
-    }
-
-    @GetMapping("/{id}")
-    public ReservationResponse findById(@PathVariable Long id) {
-        return service.findById(id);
+    @GetMapping("/passager/{passagerId}")
+    public List<ReservationResponse> findByPassagerId(
+            @PathVariable Long passagerId) {
+        return service.findByPassagerId(passagerId);
     }
 
     @PatchMapping("/{id}/annuler")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void cancel(@PathVariable Long id) {
-        service.cancel(id);
+    public void cancel(@PathVariable Long id, @RequestParam Long passagerId) {
+        service.cancel(id, passagerId);
     }
 }

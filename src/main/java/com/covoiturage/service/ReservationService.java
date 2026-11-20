@@ -12,5 +12,7 @@ public interface ReservationService {
 
     ReservationResponse findById(Long id);
 
-    void cancel(Long id);
+    List<ReservationResponse> findByPassagerId(Long passagerId);
+
+    void cancel(Long id, Long passagerId);
 }

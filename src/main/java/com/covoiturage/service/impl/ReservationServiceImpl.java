@@ -13,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.math.RoundingMode;
+import com.covoiturage.exception.InvalidRequestException;
+
 
 @Service
 @Transactional
@@ -40,7 +43,7 @@ public class ReservationServiceImpl implements ReservationService {
         Passager passager = passagerRepository.findById(request.passagerId())
                 .orElseThrow(() -> new ResourceNotFoundException("Passenger not found"));
 
-        Trajet trajet = trajetRepository.findById(request.trajetId())
+        Trajet trajet = trajetRepository.findByIdForUpdate(request.trajetId())
                 .orElseThrow(() -> new ResourceNotFoundException("Journey not found"));
 
         if (trajet.getStatut() != StatutTrajet.PUBLIE) {
@@ -63,7 +66,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .orElseThrow(() -> new ResourceNotFoundException("Arrival stop not found"));
 
         if (montee.getOrdre() >= descente.getOrdre()) {
-            throw new BusinessRuleException("Invalid boarding and arrival stops");
+            throw new InvalidRequestException("The boarding stop must be before the arrival stop");
         }
 
         long reservedSeats = reservationRepository.sumReservedSeats(
@@ -82,6 +85,7 @@ public class ReservationServiceImpl implements ReservationService {
                 descente.getPrixDepuisDepart()
                         .subtract(montee.getPrixDepuisDepart())
                         .multiply(java.math.BigDecimal.valueOf(request.nombrePlaces()))
+                        .setScale(2, RoundingMode.HALF_UP)
         );
         reservation.setDateReservation(LocalDateTime.now());
         reservation.setStatut(StatutReservation.CONFIRMEE);
@@ -114,12 +118,30 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public void cancel(Long id) {
+    @Transactional(readOnly = true)
+    public List<ReservationResponse> findByPassagerId(Long passagerId) {
+
+        if (!passagerRepository.existsById(passagerId)) {
+            throw new ResourceNotFoundException("Passenger not found");
+        }
+
+        return reservationRepository.findByPassager_Id(passagerId)
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public void cancel(Long id, Long passagerId) {
         Reservation reservation = reservationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation not found"));
 
-        if (reservation.getStatut() == StatutReservation.ANNULEE) {
-            throw new BusinessRuleException("Reservation is already cancelled");
+        if (passagerId != null && !reservation.getPassager().getId().equals(passagerId)) {
+            throw new com.covoiturage.exception.ForbiddenActionException("Only the reservation owner can cancel it");
+        }
+
+        if (reservation.getStatut() != StatutReservation.CONFIRMEE) {
+            throw new BusinessRuleException("Only a confirmed reservation can be cancelled");
         }
 
         LocalDateTime departure = reservation.getTrajet()
@@ -131,6 +153,13 @@ public class ReservationServiceImpl implements ReservationService {
 
         reservation.setStatut(StatutReservation.ANNULEE);
 
-        reservation.getTrajet().setStatut(StatutTrajet.PUBLIE);
+        if (reservation.getTrajet().getStatut() == StatutTrajet.COMPLET) {
+            reservation.getTrajet().setStatut(StatutTrajet.PUBLIE);
+        }
+    }
+
+    // Retained for existing service-level callers; the REST API always supplies the owner id.
+    public void cancel(Long id) {
+        cancel(id, null);
     }
 }

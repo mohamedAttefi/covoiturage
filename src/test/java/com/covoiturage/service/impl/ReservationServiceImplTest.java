@@ -13,6 +13,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.covoiturage.entity.Passager;
 import com.covoiturage.dto.ReservationRequest;
 import com.covoiturage.enums.StatutReservation;
+
+import java.math.BigDecimal;
 import java.util.Optional;
 import com.covoiturage.entity.PointArret;
 import com.covoiturage.entity.Reservation;
@@ -68,6 +70,18 @@ class ReservationServiceImplTest {
         trajet.setId(1L);
         trajet.setStatut(StatutTrajet.PUBLIE);
         trajet.setPlacesProposees(3);
+
+        PointArret departure = new PointArret();
+        departure.setId(10L);
+        departure.setOrdre(0);
+        departure.setPrixDepuisDepart(BigDecimal.ZERO);
+
+        PointArret arrival = new PointArret();
+        arrival.setId(11L);
+        arrival.setOrdre(1);
+        arrival.setPrixDepuisDepart(new BigDecimal("120"));
+
+        trajet.setPointsArret(List.of(departure, arrival));
 
         when(passagerRepository.findById(1L))
                 .thenReturn(Optional.of(passager));
