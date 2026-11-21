@@ -12,5 +12,5 @@ public interface ReservationService {
 
     ReservationResponse findById(Long id);
 
-
+    void cancel(Long id);
 }
