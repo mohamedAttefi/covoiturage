@@ -20,7 +20,12 @@ public class PassagerServiceImpl implements PassagerService {
     private final PassagerRepository repository;
     private final PassagerMapper mapper;
 
-
+    public PassagerServiceImpl(
+            PassagerRepository repository,
+            PassagerMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
 
 
 
