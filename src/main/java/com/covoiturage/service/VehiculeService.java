@@ -14,5 +14,5 @@ public interface VehiculeService {
 
     VehiculeResponse update(Long id, VehiculeRequest request);
 
-
+    void delete(Long id);
 }
