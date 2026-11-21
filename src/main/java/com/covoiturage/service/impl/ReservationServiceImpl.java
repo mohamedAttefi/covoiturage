@@ -113,5 +113,24 @@ public class ReservationServiceImpl implements ReservationService {
         return mapper.toResponse(reservation);
     }
 
+    @Override
+    public void cancel(Long id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Reservation not found"));
 
+        if (reservation.getStatut() == StatutReservation.ANNULEE) {
+            throw new BusinessRuleException("Reservation is already cancelled");
+        }
+
+        LocalDateTime departure = reservation.getTrajet()
+                .getPointsArret().get(0).getHeurePassage();
+
+        if (LocalDateTime.now().isAfter(departure.minusHours(24))) {
+            throw new BusinessRuleException("Cancellation is only allowed 24 hours before departure");
+        }
+
+        reservation.setStatut(StatutReservation.ANNULEE);
+
+        reservation.getTrajet().setStatut(StatutTrajet.PUBLIE);
+    }
 }
