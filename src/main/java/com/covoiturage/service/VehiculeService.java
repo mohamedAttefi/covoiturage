@@ -8,7 +8,7 @@ public interface VehiculeService {
 
     VehiculeResponse create(VehiculeRequest request);
 
-
+    List<VehiculeResponse> findAll();
 
 
 
