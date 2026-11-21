@@ -12,5 +12,5 @@ public interface TrajetService {
 
     TrajetResponse findById(Long id);
 
-
+    void delete(Long id);
 }
