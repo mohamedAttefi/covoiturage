@@ -86,5 +86,12 @@ public class ConducteurServiceImpl implements ConducteurService {
         return mapper.toResponse(repository.save(conducteur));
     }
 
+    @Override
+    public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Conducteur introuvable");
+        }
 
+        repository.deleteById(id);
+    }
 }
