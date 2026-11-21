@@ -8,7 +8,7 @@ public interface TrajetService {
 
     TrajetResponse create(TrajetRequest request);
 
-
+    List<TrajetResponse> findAll();
 
 
 
