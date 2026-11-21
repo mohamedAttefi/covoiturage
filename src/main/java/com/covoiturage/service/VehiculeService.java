@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface VehiculeService {
 
-
+    VehiculeResponse create(VehiculeRequest request);
 
 
 
