@@ -52,7 +52,14 @@ public class ConducteurServiceImpl implements ConducteurService {
                 .toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public ConducteurResponse findById(Long id) {
+        Conducteur conducteur = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Conducteur introuvable"));
 
+        return mapper.toResponse(conducteur);
+    }
 
 
 
