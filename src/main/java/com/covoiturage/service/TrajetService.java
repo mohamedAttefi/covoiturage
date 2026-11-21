@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface TrajetService {
 
-
+    TrajetResponse create(TrajetRequest request);
 
 
 
