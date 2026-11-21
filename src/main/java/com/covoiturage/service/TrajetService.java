@@ -10,7 +10,7 @@ public interface TrajetService {
 
     List<TrajetResponse> findAll();
 
-
+    TrajetResponse findById(Long id);
 
 
 }
