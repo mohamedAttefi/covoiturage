@@ -27,7 +27,21 @@ public class ConducteurServiceImpl implements ConducteurService {
         this.mapper = mapper;
     }
 
+    @Override
+    public ConducteurResponse create(ConducteurRequest request) {
 
+        if (repository.existsByEmail(request.email())) {
+            throw new DuplicateResourceException("Email already exists");
+        }
+
+        if (repository.existsByNumeroPermis(request.numeroPermis())) {
+            throw new DuplicateResourceException("Licence number already exists");
+        }
+
+        Conducteur conducteur = mapper.toEntity(request);
+
+        return mapper.toResponse(repository.save(conducteur));
+    }
 
 
 
