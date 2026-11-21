@@ -10,7 +10,7 @@ public interface ReservationService {
 
     List<ReservationResponse> findAll();
 
-
+    ReservationResponse findById(Long id);
 
 
 }
