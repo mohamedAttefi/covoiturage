@@ -39,7 +39,14 @@ public class PassagerServiceImpl implements PassagerService {
         return mapper.toResponse(repository.save(passager));
     }
 
-
+    @Override
+    @Transactional(readOnly = true)
+    public List<PassagerResponse> findAll() {
+        return repository.findAll()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
 
 
 
