@@ -61,7 +61,30 @@ public class ConducteurServiceImpl implements ConducteurService {
         return mapper.toResponse(conducteur);
     }
 
+    @Override
+    public ConducteurResponse update(Long id, ConducteurRequest request) {
 
+        Conducteur conducteur = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Conducteur introuvable"));
+
+        if (!conducteur.getEmail().equals(request.email())
+                && repository.existsByEmail(request.email())) {
+            throw new DuplicateResourceException("Email already exists");
+        }
+
+        if (!conducteur.getNumeroPermis().equals(request.numeroPermis())
+                && repository.existsByNumeroPermis(request.numeroPermis())) {
+            throw new DuplicateResourceException("Licence number already exists");
+        }
+
+        conducteur.setNom(request.nom());
+        conducteur.setPrenom(request.prenom());
+        conducteur.setEmail(request.email());
+        conducteur.setTelephone(request.telephone());
+        conducteur.setNumeroPermis(request.numeroPermis());
+
+        return mapper.toResponse(repository.save(conducteur));
+    }
 
 
 }
