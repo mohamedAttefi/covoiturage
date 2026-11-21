@@ -43,7 +43,14 @@ public class ConducteurServiceImpl implements ConducteurService {
         return mapper.toResponse(repository.save(conducteur));
     }
 
-
+    @Override
+    @Transactional(readOnly = true)
+    public List<ConducteurResponse> findAll() {
+        return repository.findAll()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
 
 
 
