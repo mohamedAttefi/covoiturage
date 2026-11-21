@@ -104,7 +104,14 @@ public class ReservationServiceImpl implements ReservationService {
                 .toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public ReservationResponse findById(Long id) {
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Reservation not found"));
 
+        return mapper.toResponse(reservation);
+    }
 
 
 }
