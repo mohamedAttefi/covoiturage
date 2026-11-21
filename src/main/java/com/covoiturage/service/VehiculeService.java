@@ -12,7 +12,7 @@ public interface VehiculeService {
 
     VehiculeResponse findById(Long id);
 
-
+    VehiculeResponse update(Long id, VehiculeRequest request);
 
 
 }
