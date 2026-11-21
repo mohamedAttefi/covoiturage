@@ -58,7 +58,25 @@ public class PassagerServiceImpl implements PassagerService {
         return mapper.toResponse(passager);
     }
 
+    @Override
+    public PassagerResponse update(Long id, PassagerRequest request) {
 
+        Passager passager = repository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Passager introuvable"));
+
+        if (!passager.getEmail().equals(request.email())
+                && repository.existsByEmail(request.email())) {
+            throw new DuplicateResourceException("Email already exists");
+        }
+
+        passager.setNom(request.nom());
+        passager.setPrenom(request.prenom());
+        passager.setEmail(request.email());
+        passager.setTelephone(request.telephone());
+
+        return mapper.toResponse(repository.save(passager));
+    }
 
 
 }
