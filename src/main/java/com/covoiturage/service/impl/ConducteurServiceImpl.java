@@ -20,7 +20,12 @@ public class ConducteurServiceImpl implements ConducteurService {
     private final ConducteurRepository repository;
     private final ConducteurMapper mapper;
 
-
+    public ConducteurServiceImpl(
+            ConducteurRepository repository,
+            ConducteurMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
 
 
 
