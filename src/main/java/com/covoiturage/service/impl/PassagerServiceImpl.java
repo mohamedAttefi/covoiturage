@@ -27,7 +27,17 @@ public class PassagerServiceImpl implements PassagerService {
         this.mapper = mapper;
     }
 
+    @Override
+    public PassagerResponse create(PassagerRequest request) {
 
+        if (repository.existsByEmail(request.email())) {
+            throw new DuplicateResourceException("Email already exists");
+        }
+
+        Passager passager = mapper.toEntity(request);
+
+        return mapper.toResponse(repository.save(passager));
+    }
 
 
 
