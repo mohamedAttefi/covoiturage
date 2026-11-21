@@ -78,5 +78,12 @@ public class PassagerServiceImpl implements PassagerService {
         return mapper.toResponse(repository.save(passager));
     }
 
+    @Override
+    public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Passager introuvable");
+        }
 
+        repository.deleteById(id);
+    }
 }
