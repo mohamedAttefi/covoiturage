@@ -10,7 +10,7 @@ public interface VehiculeService {
 
     List<VehiculeResponse> findAll();
 
-
+    VehiculeResponse findById(Long id);
 
 
 
