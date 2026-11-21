@@ -23,7 +23,16 @@ public class ReservationServiceImpl implements ReservationService {
     private final TrajetRepository trajetRepository;
     private final ReservationMapper mapper;
 
-
+    public ReservationServiceImpl(
+            ReservationRepository reservationRepository,
+            PassagerRepository passagerRepository,
+            TrajetRepository trajetRepository,
+            ReservationMapper mapper) {
+        this.reservationRepository = reservationRepository;
+        this.passagerRepository = passagerRepository;
+        this.trajetRepository = trajetRepository;
+        this.mapper = mapper;
+    }
 
 
 
