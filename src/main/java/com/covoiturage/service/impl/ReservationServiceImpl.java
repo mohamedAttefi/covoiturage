@@ -95,7 +95,14 @@ public class ReservationServiceImpl implements ReservationService {
         return mapper.toResponse(saved);
     }
 
-
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReservationResponse> findAll() {
+        return reservationRepository.findAll()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
 
 
 
