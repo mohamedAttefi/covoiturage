@@ -34,7 +34,29 @@ class ReservationServiceImplTest {
     @InjectMocks
     ReservationServiceImpl service;
 
+    @Test
+    void shouldRejectReservationForUnavailableJourney() {
 
+        Trajet trajet = new Trajet();
+        trajet.setStatut(StatutTrajet.ANNULE);
+
+        when(passagerRepository.findById(1L))
+                .thenReturn(Optional.of(new com.covoiturage.entity.Passager()));
+
+        when(trajetRepository.findById(1L))
+                .thenReturn(Optional.of(trajet));
+
+        var request = new com.covoiturage.dto.ReservationRequest(
+                1L, 1L, 1L, 2L, 1
+        );
+
+        assertThrows(
+                BusinessRuleException.class,
+                () -> service.create(request)
+        );
+
+        verify(reservationRepository, never()).save(any());
+    }
 
 
 
