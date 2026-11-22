@@ -27,7 +27,23 @@ class PassagerServiceImplTest {
     @InjectMocks
     PassagerServiceImpl service;
 
+    @Test
+    void shouldRejectDuplicateEmail() {
 
+        PassagerRequest request = new PassagerRequest(
+                "Karim", "Ali",
+                "karim@example.com", "0612345678"
+        );
+
+        when(repository.existsByEmail(request.email())).thenReturn(true);
+
+        assertThrows(
+                DuplicateResourceException.class,
+                () -> service.create(request)
+        );
+
+        verify(repository, never()).save(any());
+    }
 
 
 
