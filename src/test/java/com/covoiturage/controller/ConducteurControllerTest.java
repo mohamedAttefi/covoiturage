@@ -29,7 +29,21 @@ class ConducteurControllerTest {
     @MockitoBean
     ConducteurService service;
 
+    @Test
+    void shouldReturnAllConducteurs() throws Exception {
 
+        ConducteurResponse response = new ConducteurResponse(
+                1L, "Alami", "Ahmed",
+                "ahmed@example.com", "0612345678", "PER123"
+        );
+
+        when(service.findAll()).thenReturn(List.of(response));
+
+        mockMvc.perform(get("/api/conducteurs"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].nom").value("Alami"))
+                .andExpect(jsonPath("$[0].email").value("ahmed@example.com"));
+    }
 
 
 
