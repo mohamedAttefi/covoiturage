@@ -93,5 +93,30 @@ class ReservationServiceImplTest {
         verify(reservationRepository, never()).save(any());
     }
 
+    @Test
+    void shouldRejectCancellationWithin24Hours() {
 
+        PointArret departure = new PointArret();
+        departure.setHeurePassage(LocalDateTime.now().plusHours(12));
+
+        Trajet trajet = new Trajet();
+        trajet.setPointsArret(List.of(departure));
+
+        Reservation reservation = new Reservation();
+        reservation.setStatut(StatutReservation.CONFIRMEE);
+        reservation.setTrajet(trajet);
+
+        when(reservationRepository.findById(1L))
+                .thenReturn(Optional.of(reservation));
+
+        assertThrows(
+                BusinessRuleException.class,
+                () -> service.cancel(1L)
+        );
+
+        assertEquals(
+                StatutReservation.CONFIRMEE,
+                reservation.getStatut()
+        );
+    }
 }
