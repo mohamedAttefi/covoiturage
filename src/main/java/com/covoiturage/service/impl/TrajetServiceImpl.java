@@ -39,7 +39,36 @@ public class  TrajetServiceImpl implements TrajetService {
         this.mapper = mapper;
     }
 
+    @Override
+    public TrajetResponse create(TrajetRequest request) {
 
+        Conducteur conducteur = conducteurRepository.findById(request.conducteurId())
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
+
+        Vehicule vehicule = vehiculeRepository.findById(request.vehiculeId())
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
+
+        if (!vehicule.getConducteur().getId().equals(conducteur.getId())) {
+            throw new BusinessRuleException("This vehicle does not belong to this driver");
+        }
+
+        if (request.placesProposees() > vehicule.getCapacite()) {
+            throw new BusinessRuleException("Proposed seats exceed vehicle capacity");
+        }
+
+        validateStops(request.pointsArret());
+
+        Trajet trajet = mapper.toEntity(request);
+        trajet.setConducteur(conducteur);
+        trajet.setVehicule(vehicule);
+        trajet.setStatut(StatutTrajet.PUBLIE);
+
+        for (PointArret point : trajet.getPointsArret()) {
+            point.setTrajet(trajet);
+        }
+
+        return mapper.toResponse(trajetRepository.save(trajet));
+    }
 
 
 
