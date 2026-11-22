@@ -70,7 +70,46 @@ public class  TrajetServiceImpl implements TrajetService {
         return mapper.toResponse(trajetRepository.save(trajet));
     }
 
+    private void validateStops(List<PointArretRequest> stops) {
 
+        if (stops == null || stops.size() < 2) {
+            throw new BusinessRuleException("A journey needs at least two stops");
+        }
+
+        if (stops.get(0).heurePassage().isBefore(LocalDateTime.now())) {
+            throw new BusinessRuleException("Departure must be in the future");
+        }
+
+        if (stops.get(0).prixDepuisDepart().compareTo(BigDecimal.ZERO) != 0) {
+            throw new BusinessRuleException("The first stop price must be zero");
+        }
+
+        Set<String> cities = new HashSet<>();
+
+        for (int i = 0; i < stops.size(); i++) {
+            PointArretRequest current = stops.get(i);
+
+            if (!cities.add(current.ville().trim().toLowerCase())) {
+                throw new BusinessRuleException("A city cannot appear twice");
+            }
+
+            if (i > 0) {
+                PointArretRequest previous = stops.get(i - 1);
+
+                if (current.ordre() <= previous.ordre()) {
+                    throw new BusinessRuleException("Stop order must increase");
+                }
+
+                if (!current.heurePassage().isAfter(previous.heurePassage())) {
+                    throw new BusinessRuleException("Stop times must increase");
+                }
+
+                if (current.prixDepuisDepart().compareTo(previous.prixDepuisDepart()) <= 0) {
+                    throw new BusinessRuleException("Stop prices must increase");
+                }
+            }
+        }
+    }
 
 
 
