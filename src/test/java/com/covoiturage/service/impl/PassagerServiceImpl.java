@@ -45,7 +45,33 @@ class PassagerServiceImplTest {
         verify(repository, never()).save(any());
     }
 
+    @Test
+    void shouldCreatePassagerSuccessfully() {
 
+        PassagerRequest request = new PassagerRequest(
+                "Karim", "Ali",
+                "karim@example.com", "0612345678"
+        );
+
+        Passager passager = new Passager();
+
+        PassagerResponse response = new PassagerResponse(
+                1L, "Karim", "Ali",
+                "karim@example.com", "0612345678"
+        );
+
+        when(repository.existsByEmail(request.email())).thenReturn(false);
+        when(mapper.toEntity(request)).thenReturn(passager);
+        when(repository.save(passager)).thenReturn(passager);
+        when(mapper.toResponse(passager)).thenReturn(response);
+
+        PassagerResponse result = service.create(request);
+
+        assertNotNull(result);
+        assertEquals("karim@example.com", result.email());
+
+        verify(repository).save(passager);
+    }
 
 
 }
