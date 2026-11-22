@@ -88,5 +88,12 @@ public class VehiculeServiceImpl implements VehiculeService {
         return mapper.toResponse(vehiculeRepository.save(vehicule));
     }
 
+    @Override
+    public void delete(Long id) {
+        if (!vehiculeRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Vehicle not found");
+        }
 
+        vehiculeRepository.deleteById(id);
+    }
 }
