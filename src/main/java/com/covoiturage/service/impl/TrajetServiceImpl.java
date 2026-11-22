@@ -120,7 +120,14 @@ public class  TrajetServiceImpl implements TrajetService {
                 .toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public TrajetResponse findById(Long id) {
+        Trajet trajet = trajetRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Journey not found"));
 
+        return mapper.toResponse(trajet);
+    }
 
 
 }
