@@ -59,5 +59,44 @@ class TrajetServiceImplTest {
         verify(trajetRepository, never()).save(any());
     }
 
+    @Test
+    void shouldRejectPastDepartureDate() {
 
+        PointArretRequest departure = new PointArretRequest(
+                "Marrakech",
+                1,
+                LocalDateTime.now().minusDays(1),
+                BigDecimal.ZERO
+        );
+
+        PointArretRequest arrival = new PointArretRequest(
+                "Casablanca",
+                2,
+                LocalDateTime.now().plusDays(1),
+                new BigDecimal("120")
+        );
+
+        TrajetRequest request = new TrajetRequest(
+                1L, 1L, 3, List.of(departure, arrival)
+        );
+
+        Conducteur conducteur = new Conducteur();
+        conducteur.setId(1L);
+
+        Vehicule vehicule = new Vehicule();
+        vehicule.setConducteur(conducteur);
+
+        when(conducteurRepository.findById(1L))
+                .thenReturn(Optional.of(conducteur));
+
+        when(vehiculeRepository.findById(1L))
+                .thenReturn(Optional.of(vehicule));
+
+        assertThrows(
+                BusinessRuleException.class,
+                () -> service.create(request)
+        );
+
+        verify(trajetRepository, never()).save(any());
+    }
 }
