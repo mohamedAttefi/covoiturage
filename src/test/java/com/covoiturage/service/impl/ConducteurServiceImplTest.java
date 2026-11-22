@@ -77,5 +77,22 @@ class ConducteurServiceImplTest {
         verify(repository).save(conducteur);
     }
 
+    @Test
+    void shouldRejectDuplicateNumeroPermis() {
 
+        ConducteurRequest request = new ConducteurRequest(
+                "Alami", "Ahmed",
+                "ahmed@example.com", "0612345678", "PER123"
+        );
+
+        when(repository.existsByEmail(request.email())).thenReturn(false);
+        when(repository.existsByNumeroPermis(request.numeroPermis())).thenReturn(true);
+
+        assertThrows(
+                DuplicateResourceException.class,
+                () -> service.create(request)
+        );
+
+        verify(repository, never()).save(any());
+    }
 }
