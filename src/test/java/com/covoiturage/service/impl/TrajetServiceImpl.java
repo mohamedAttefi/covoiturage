@@ -32,7 +32,32 @@ class TrajetServiceImplTest {
     @InjectMocks
     TrajetServiceImpl service;
 
+    @Test
+    void shouldRejectJourneyWithLessThanTwoStops() {
 
+        TrajetRequest request = new TrajetRequest(
+                1L, 1L, 3, List.of()
+        );
+
+        when(conducteurRepository.findById(1L))
+                .thenReturn(Optional.of(new Conducteur()));
+
+        Vehicule vehicule = new Vehicule();
+        Conducteur conducteur = new Conducteur();
+
+        conducteur.setId(1L);
+        vehicule.setConducteur(conducteur);
+
+        when(vehiculeRepository.findById(1L))
+                .thenReturn(Optional.of(vehicule));
+
+        assertThrows(
+                BusinessRuleException.class,
+                () -> service.create(request)
+        );
+
+        verify(trajetRepository, never()).save(any());
+    }
 
 
 }
