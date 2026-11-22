@@ -50,5 +50,26 @@ class VehiculeServiceImplTest {
         verify(vehiculeRepository, never()).save(any());
     }
 
+    @Test
+    void shouldRejectVehicleWhenDriverDoesNotExist() {
 
+        VehiculeRequest request = new VehiculeRequest(
+                "Toyota", "Corolla",
+                "12345-A-6", "White", 5, 99L
+        );
+
+        when(vehiculeRepository.existsByImmatriculation(
+                request.immatriculation()
+        )).thenReturn(false);
+
+        when(conducteurRepository.findById(99L))
+                .thenReturn(java.util.Optional.empty());
+
+        assertThrows(
+                ResourceNotFoundException.class,
+                () -> service.create(request)
+        );
+
+        verify(vehiculeRepository, never()).save(any());
+    }
 }
