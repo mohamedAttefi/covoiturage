@@ -27,7 +27,24 @@ class ConducteurServiceImplTest {
     @InjectMocks
     ConducteurServiceImpl service;
 
+    @Test
+    void shouldRejectDuplicateEmail() {
 
+        ConducteurRequest request = new ConducteurRequest(
+                "Alami", "Ahmed",
+                "ahmed@example.com", "0612345678", "PER123"
+        );
+
+        when(repository.existsByEmail(request.email()))
+                .thenReturn(true);
+
+        assertThrows(
+                DuplicateResourceException.class,
+                () -> service.create(request)
+        );
+
+        verify(repository).existsByEmail(request.email());
+    }
 
 
 
