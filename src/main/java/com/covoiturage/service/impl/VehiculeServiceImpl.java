@@ -56,7 +56,14 @@ public class VehiculeServiceImpl implements VehiculeService {
                 .toList();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public VehiculeResponse findById(Long id) {
+        Vehicule vehicule = vehiculeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Vehicle not found"));
 
+        return mapper.toResponse(vehicule);
+    }
 
 
 
