@@ -58,7 +58,40 @@ class ReservationServiceImplTest {
         verify(reservationRepository, never()).save(any());
     }
 
+    @Test
+    void shouldRejectReservationWhenNotEnoughSeats() {
 
+        Passager passager = new Passager();
+        passager.setId(1L);
+
+        Trajet trajet = new Trajet();
+        trajet.setId(1L);
+        trajet.setStatut(StatutTrajet.PUBLIE);
+        trajet.setPlacesProposees(3);
+
+        when(passagerRepository.findById(1L))
+                .thenReturn(Optional.of(passager));
+
+        when(trajetRepository.findById(1L))
+                .thenReturn(Optional.of(trajet));
+
+        when(reservationRepository.existsByPassager_IdAndTrajet_IdAndStatut(
+                1L, 1L, StatutReservation.CONFIRMEE
+        )).thenReturn(false);
+
+        when(reservationRepository.sumReservedSeats(
+                1L, StatutReservation.CONFIRMEE
+        )).thenReturn(2L);
+
+        var request = new ReservationRequest(1L, 1L, 10L, 11L, 2);
+
+        assertThrows(
+                BusinessRuleException.class,
+                () -> service.create(request)
+        );
+
+        verify(reservationRepository, never()).save(any());
+    }
 
 
 }
