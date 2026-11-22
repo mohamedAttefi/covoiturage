@@ -30,7 +30,25 @@ class VehiculeServiceImplTest {
     @InjectMocks
     VehiculeServiceImpl service;
 
+    @Test
+    void shouldRejectDuplicateImmatriculation() {
 
+        VehiculeRequest request = new VehiculeRequest(
+                "Toyota", "Corolla",
+                "12345-A-6", "White", 5, 1L
+        );
+
+        when(vehiculeRepository.existsByImmatriculation(
+                request.immatriculation()
+        )).thenReturn(true);
+
+        assertThrows(
+                DuplicateResourceException.class,
+                () -> service.create(request)
+        );
+
+        verify(vehiculeRepository, never()).save(any());
+    }
 
 
 }
