@@ -45,7 +45,32 @@ class ConducteurControllerTest {
                 .andExpect(jsonPath("$[0].email").value("ahmed@example.com"));
     }
 
+    @Test
+    void shouldCreateConducteur() throws Exception {
 
+        ConducteurResponse response = new ConducteurResponse(
+                1L, "Alami", "Ahmed",
+                "ahmed@example.com", "0612345678", "PER123"
+        );
+
+        when(service.create(any(ConducteurRequest.class)))
+                .thenReturn(response);
+
+        mockMvc.perform(post("/api/conducteurs")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                {
+                    "nom": "Alami",
+                    "prenom": "Ahmed",
+                    "email": "ahmed@example.com",
+                    "telephone": "0612345678",
+                    "numeroPermis": "PER123"
+                }
+                """))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.nom").value("Alami"))
+                .andExpect(jsonPath("$.id").value(1));
+    }
 
 
 }
