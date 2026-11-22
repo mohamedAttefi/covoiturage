@@ -47,7 +47,14 @@ public class VehiculeServiceImpl implements VehiculeService {
         return mapper.toResponse(vehiculeRepository.save(vehicule));
     }
 
-
+    @Override
+    @Transactional(readOnly = true)
+    public List<VehiculeResponse> findAll() {
+        return vehiculeRepository.findAll()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
 
 
 
