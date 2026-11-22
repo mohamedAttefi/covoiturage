@@ -32,7 +32,20 @@ public class VehiculeServiceImpl implements VehiculeService {
         this.mapper = mapper;
     }
 
+    @Override
+    public VehiculeResponse create(VehiculeRequest request) {
+        if (vehiculeRepository.existsByImmatriculation(request.immatriculation())) {
+            throw new DuplicateResourceException("Immatriculation already exists");
+        }
 
+        Conducteur conducteur = conducteurRepository.findById(request.conducteurId())
+                .orElseThrow(() -> new ResourceNotFoundException("Driver not found"));
+
+        Vehicule vehicule = mapper.toEntity(request);
+        vehicule.setConducteur(conducteur);
+
+        return mapper.toResponse(vehiculeRepository.save(vehicule));
+    }
 
 
 
