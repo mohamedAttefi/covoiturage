@@ -111,7 +111,14 @@ public class  TrajetServiceImpl implements TrajetService {
         }
     }
 
-
+    @Override
+    @Transactional(readOnly = true)
+    public List<TrajetResponse> findAll() {
+        return trajetRepository.findAll()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
 
 
 
