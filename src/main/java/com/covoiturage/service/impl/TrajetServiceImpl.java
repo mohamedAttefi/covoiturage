@@ -129,5 +129,12 @@ public class  TrajetServiceImpl implements TrajetService {
         return mapper.toResponse(trajet);
     }
 
+    @Override
+    public void delete(Long id) {
+        if (!trajetRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Journey not found");
+        }
 
+        trajetRepository.deleteById(id);
+    }
 }
