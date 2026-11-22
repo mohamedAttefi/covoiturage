@@ -28,7 +28,16 @@ public class  TrajetServiceImpl implements TrajetService {
     private final VehiculeRepository vehiculeRepository;
     private final TrajetMapper mapper;
 
-
+    public TrajetServiceImpl(
+            TrajetRepository trajetRepository,
+            ConducteurRepository conducteurRepository,
+            VehiculeRepository vehiculeRepository,
+            TrajetMapper mapper) {
+        this.trajetRepository = trajetRepository;
+        this.conducteurRepository = conducteurRepository;
+        this.vehiculeRepository = vehiculeRepository;
+        this.mapper = mapper;
+    }
 
 
 
