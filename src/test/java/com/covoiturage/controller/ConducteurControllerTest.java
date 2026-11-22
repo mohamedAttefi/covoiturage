@@ -72,5 +72,20 @@ class ConducteurControllerTest {
                 .andExpect(jsonPath("$.id").value(1));
     }
 
+    @Test
+    void shouldRejectInvalidEmail() throws Exception {
 
+        mockMvc.perform(post("/api/conducteurs")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                {
+                    "nom": "Alami",
+                    "prenom": "Ahmed",
+                    "email": "not-an-email",
+                    "telephone": "0612345678",
+                    "numeroPermis": "PER123"
+                }
+                """))
+                .andExpect(status().isBadRequest());
+    }
 }
