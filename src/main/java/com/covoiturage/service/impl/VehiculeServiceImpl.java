@@ -23,7 +23,14 @@ public class VehiculeServiceImpl implements VehiculeService {
     private final ConducteurRepository conducteurRepository;
     private final VehiculeMapper mapper;
 
-
+    public VehiculeServiceImpl(
+            VehiculeRepository vehiculeRepository,
+            ConducteurRepository conducteurRepository,
+            VehiculeMapper mapper) {
+        this.vehiculeRepository = vehiculeRepository;
+        this.conducteurRepository = conducteurRepository;
+        this.mapper = mapper;
+    }
 
 
 
