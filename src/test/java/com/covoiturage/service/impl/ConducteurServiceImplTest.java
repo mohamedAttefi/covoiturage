@@ -46,7 +46,36 @@ class ConducteurServiceImplTest {
         verify(repository).existsByEmail(request.email());
     }
 
+    @Test
+    void shouldCreateConducteurSuccessfully() {
 
+        ConducteurRequest request = new ConducteurRequest(
+                "Alami", "Ahmed",
+                "ahmed@example.com", "0612345678", "PER123"
+        );
+
+        Conducteur conducteur = new Conducteur();
+
+        Conducteur saved = new Conducteur();
+
+        ConducteurResponse response = new ConducteurResponse(
+                1L, "Alami", "Ahmed",
+                "ahmed@example.com", "0612345678", "PER123"
+        );
+
+        when(repository.existsByEmail(request.email())).thenReturn(false);
+        when(repository.existsByNumeroPermis(request.numeroPermis())).thenReturn(false);
+        when(mapper.toEntity(request)).thenReturn(conducteur);
+        when(repository.save(conducteur)).thenReturn(saved);
+        when(mapper.toResponse(saved)).thenReturn(response);
+
+        ConducteurResponse result = service.create(request);
+
+        assertNotNull(result);
+        assertEquals("ahmed@example.com", result.email());
+
+        verify(repository).save(conducteur);
+    }
 
 
 }
